@@ -5,7 +5,8 @@ pipeline {
 
   parameters {
     string(name: 'FILENAME', defaultValue: 'ergebnis.txt', description: 'Name der Ausgabedatei')
-    string(name: 'TESTWORD', defaultValue: 'Testfile', description: 'Gesuchtes Wort')
+    choice(name: 'TESTWORD', choices: ['Testfile', 'Build', 'CI'], description: 'Gesuchtes Wort')
+    //string(name: 'TESTWORD', defaultValue: 'Testfile', description: 'Gesuchtes Wort')
     booleanParam(name: 'DO_CLEANUP', defaultValue: true, description: 'Datei zum Schluss löschen?')
   }
 
