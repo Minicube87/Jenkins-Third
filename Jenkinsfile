@@ -23,11 +23,11 @@ pipeline {
       steps {
         echo 'Prüfe Dateiinhalt...'
         // grep sucht nach dem Wort "Testfile" in der Datei
-        sh '''
+        sh """
           if grep -q ${params.TESTWORD} ${params.FILENAME}; then
             echo "Test erfolgreich!"
           fi
-        '''
+        """
       }
     }
 
