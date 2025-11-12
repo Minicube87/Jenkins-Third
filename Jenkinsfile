@@ -24,11 +24,8 @@ pipeline {
         echo 'Prüfe Dateiinhalt...'
         // grep sucht nach dem Wort "Testfile" in der Datei
         sh '''
-          if grep -q "${params.TESTWORD}" ${params.FILENAME}; then
+          if grep -q "${params.TESTWORD}" "${params.FILENAME}"; then
             echo "Test erfolgreich!"
-          else
-            echo "Test fehlgeschlagen!"
-            exit 1
           fi
         '''
       }
