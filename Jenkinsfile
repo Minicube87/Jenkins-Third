@@ -3,13 +3,19 @@ pipeline {
     docker { image 'ubuntu:20.04' }
   }
 
+  parameters {
+    string(name: 'FILENAME', defaultValue: 'ergebnis.txt', description: 'Name der Ausgabedatei')
+    choice(name: 'TESTWORD', choices: ['Testfile', 'Build', 'CI'], description: 'Gesuchtes Wort')
+    booleanParam(name: 'DO_CLEANUP', defaultValue: true, description: 'Datei zum Schluss löschen?')
+  }
+
   stages {
 
     stage('Build') {
       steps {
         echo 'Starte Build...'
-        sh 'echo "Dies ist ein Testfile" > ergebnis.txt'
-        echo 'Datei erstellt.'
+        sh "echo 'Dies ist ein ${TESTWORD}' > ${FILENAME}"
+        echo "Datei '${FILENAME}' erstellt."
       }
     }
 
@@ -18,7 +24,7 @@ pipeline {
         echo 'Prüfe Dateiinhalt...'
         // grep sucht nach dem Wort "Testfile" in der Datei
         sh '''
-          if grep -q "Testfile" ergebnis.txt; then
+          if grep -q "${TESTWORD}" ${FILENAME} then
             echo "Test erfolgreich!"
           else
             echo "Test fehlgeschlagen!"
@@ -29,9 +35,12 @@ pipeline {
     }
 
     stage('Cleanup') {
+        when {
+            expression { params.DO_CLEANUP }  // das hier wird nur ausgeführt wenn true
+        }
       steps {
-        echo 'Lösche temporäre Datei...'
-        sh 'rm -f ergebnis.txt'
+        echo "Lösche '${FILENAME}'..."
+        sh "rm -f ${FILENAME}"
       }
     }
   }
